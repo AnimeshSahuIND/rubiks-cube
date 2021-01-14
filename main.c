@@ -32,7 +32,7 @@ typedef struct stcube{
 
 void cube_in(cube *);
 void cube_print(cube c);
-void cube_execmd(cube *,const char *cmd);
+int cube_execmd(cube *,const char *cmd);
 int cube_errcmd(const char *cmd);
 void cube_u(cube *);
 void cube_u_ce(cube *);
@@ -50,12 +50,14 @@ void cube_x(cube *);
 void cube_y(cube *);
 void cube_z(cube *);
 int cube_sol(cube c);
+void cube_know(void);
 int n=0;
 
 main(){
 	cube c;
 	char cmd[50];
-	int s=0;
+	int s=0,q=0;
+	cube_know();
 input:
 	cube_in(&c);
 	cube_print(c);
@@ -67,10 +69,12 @@ L1:
 	}
 	printf("Enter command : ");
 	scanf("%s",cmd);
-	cube_execmd(&c,cmd);
+	q=cube_execmd(&c,cmd);
 	cube_print(c);
 	printf("Total step: %d\n",n);
-	goto L1;
+	if(q!=1){
+		goto L1;
+	}
 }
 ///////////////////////////////////////////////////////////////
 int cube_sol(cube c){
@@ -103,37 +107,39 @@ if(t==c.d.r0.c0 && t==c.d.r0.e && t==c.d.r0.c1 && t==c.d.r1.e0 && t==c.d.r1.e1 &
 return s;
 }
 ///////////////////////////////////////////////////////////////
-void cube_execmd(cube *c,const char *cmd){
-	int i=0,error=0;
+int cube_execmd(cube *c,const char *cmd){
+	int i=0,error=0,q=0;
 	error=cube_errcmd(cmd);
 	if(error==0){
 		for(i=0;cmd[i];i++){
 			if(cmd[i+1]!='2' && cmd[i+1]!='\''){
 				switch(cmd[i]){
-					case 'u':cube_u(c);break;
-					case 'l':cube_l(c);break;
-					case 'f':cube_f(c);break;
-					case 'r':cube_r(c);break;
-					case 'b':cube_b(c);break;
-					case 'd':cube_d(c);break;
+					case 'u':cube_u(c);printf("+90 U\n");break;
+					case 'l':cube_l(c);printf("+90 L\n");break;
+					case 'f':cube_f(c);printf("+90 F\n");break;
+					case 'r':cube_r(c);printf("+90 R\n");break;
+					case 'b':cube_b(c);printf("+90 B\n");break;
+					case 'd':cube_d(c);printf("+90 D\n");break;
 					case 'x':cube_x(c);break;
 					case 'y':cube_y(c);break;
 					case 'z':cube_z(c);break;
+					case 'q':q=1;break;
 					//default:error=1;printf("Invalid comand... Try again...\n");break;
 				}
 				n++;
 			}
 			else if(cmd[i+1]=='2'){
 				switch(cmd[i]){
-					case 'u':cube_u(c);cube_u(c);break;
-					case 'l':cube_l(c);cube_l(c);break;
-					case 'f':cube_f(c);cube_f(c);break;
-					case 'r':cube_r(c);cube_r(c);break;
-					case 'b':cube_b(c);cube_b(c);break;
-					case 'd':cube_d(c);cube_d(c);break;
+					case 'u':cube_u(c);cube_u(c);printf("+180 U\n");break;
+					case 'l':cube_l(c);cube_l(c);printf("+180 L\n");break;
+					case 'f':cube_f(c);cube_f(c);printf("+180 F\n");break;
+					case 'r':cube_r(c);cube_r(c);printf("+180 R\n");break;
+					case 'b':cube_b(c);cube_b(c);printf("+180 B\n");break;
+					case 'd':cube_d(c);cube_d(c);printf("+180 D\n");break;
 					case 'x':cube_x(c);cube_x(c);break;
 					case 'y':cube_y(c);cube_y(c);break;
 					case 'z':cube_z(c);cube_z(c);break;
+					case 'q':q=1;break;
 					//default:error=1;printf("Invalid comand... Try again...\n");break;
 				}
 				i++;
@@ -141,15 +147,16 @@ void cube_execmd(cube *c,const char *cmd){
 			}
 			else if(cmd[i+1]=='\''){	
 				switch(cmd[i]){
-					case 'u':cube_u(c);cube_u(c);cube_u(c);break;
-					case 'l':cube_l(c);cube_l(c);cube_l(c);break;
-					case 'f':cube_f(c);cube_f(c);cube_f(c);break;
-					case 'r':cube_r(c);cube_r(c);cube_r(c);break;
-					case 'b':cube_b(c);cube_b(c);cube_b(c);break;
-					case 'd':cube_d(c);cube_d(c);cube_d(c);break;
+					case 'u':cube_u(c);cube_u(c);cube_u(c);printf("-90 U\n");break;
+					case 'l':cube_l(c);cube_l(c);cube_l(c);printf("-90 L\n");break;
+					case 'f':cube_f(c);cube_f(c);cube_f(c);printf("-90 F\n");break;
+					case 'r':cube_r(c);cube_r(c);cube_r(c);printf("-90 R\n");break;
+					case 'b':cube_b(c);cube_b(c);cube_b(c);printf("-90 B\n");break;
+					case 'd':cube_d(c);cube_d(c);cube_d(c);printf("-90 D\n");break;
 					case 'x':cube_x(c);cube_x(c);cube_x(c);break;
 					case 'y':cube_y(c);cube_y(c);cube_y(c);break;
 					case 'z':cube_z(c);cube_z(c);cube_z(c);break;
+					case 'q':q=1;break;
 					//default:error=1;printf("Invalid comand... Try again...\n");break;
 				}
 				i++;
@@ -159,6 +166,7 @@ void cube_execmd(cube *c,const char *cmd){
 	}
 	else
 		printf("Invalid command... Try again...\n");
+return q;
 }
 ////////////////////////////////
 int cube_errcmd(const char *cmd){
@@ -169,17 +177,19 @@ for(i=0;cmd[i];i++){
 		break;
 	}
 	else if(cmd[i+1]!='2' && cmd[i+1]!='\''){
-		if(cmd[i]!='u'&&cmd[i]!='l'&&cmd[i]!='f'&&cmd[i]!='r'&&cmd[i]!='b'&&cmd[i]!='d'&&cmd[i]!='x'&&cmd[i]!='y'&&cmd[i]!='z'){
-			error=1;
-			break;
-		}
+	if(cmd[i]!='u'&&cmd[i]!='l'&&cmd[i]!='f'&&cmd[i]!='r'&&cmd[i]!='b'&&cmd[i]!='d'&&cmd[i]!='x'&&cmd[i]!='y'&&cmd[i]!='z'&&cmd[i]!='q')
+	{
+		error=1;
+		break;
+	}
 	}
 	else if(cmd[i+1]=='2'||cmd[i+1]=='\''){
-		if(cmd[i]!='u'&&cmd[i]!='l'&&cmd[i]!='f'&&cmd[i]!='r'&&cmd[i]!='b'&&cmd[i]!='d'&&cmd[i]!='x'&&cmd[i]!='y'&&cmd[i]!='z'){
-			error=1;
-			break;
-		}
-		i++;
+	if(cmd[i]!='u'&&cmd[i]!='l'&&cmd[i]!='f'&&cmd[i]!='r'&&cmd[i]!='b'&&cmd[i]!='d'&&cmd[i]!='x'&&cmd[i]!='y'&&cmd[i]!='z'&&cmd[i]!='q')
+	{
+		error=1;
+		break;
+	}
+	i++;
 	}
 	else{
 		error=1;
@@ -191,7 +201,6 @@ return error;
 /////////////////////////////
 void cube_u(cube *c){
 row0 temp_row0;
-printf("Up side +90\n");
 temp_row0=c->f.r0;
 c->f.r0=c->r.r0;
 c->r.r0=c->b.r0;
@@ -219,7 +228,6 @@ c->u.r1.e1=temp;
 /////////////////////////
 void cube_l(cube *c){
 char temp;
-printf("Left side +90\n");
 temp=c->f.r0.c0;
 c->f.r0.c0=c->u.r0.c0;
 c->u.r0.c0=c->b.r2.c1;
@@ -259,7 +267,6 @@ c->l.r1.e1=temp;
 ///////////////////////
 void cube_f(cube *c){
 char temp;
-printf("Front side +90\n");
 temp=c->u.r2.c0;
 c->u.r2.c0=c->l.r2.c1;
 c->l.r2.c1=c->d.r0.c1;
@@ -300,7 +307,6 @@ c->f.r1.e1=temp;
 //////////////////////
 void cube_r(cube *c){
 char temp;
-printf("Right side +90\n");
 temp=c->f.r0.c1;
 c->f.r0.c1=c->d.r0.c1;
 c->d.r0.c1=c->b.r2.c0;
@@ -339,7 +345,6 @@ c->r.r1.e1=temp;
 //
 void cube_b(cube *c){
 char temp;
-printf("Back side +90\n");
 temp=c->u.r0.c0;
 c->u.r0.c0=c->r.r0.c1;
 c->r.r0.c1=c->d.r2.c1;
@@ -380,7 +385,6 @@ c->b.r1.e1=temp;
 void cube_d(cube *c){
 row0 temp_row0;
 char temp;
-printf("Down side +90\n");
 temp_row0=c->f.r2;
 c->f.r2=c->l.r2;
 c->l.r2=c->b.r2;
@@ -534,39 +538,51 @@ void cube_print(cube c){
 }
 ////////////////////////////////////////////////////////////////////
 void cube_in(cube *c){
-	printf("Hold the cube as mentioned:\n");
-	printf("Left:\033[42m__\033[0m front:\033[47m__\033[0m Right:\033[44m__\033[0m \n");
+	printf("Before giving inputs, please match the bellow conditions:\n");
+	printf("Left face:\033[42m__\033[0m front face:\033[47m__\033[0m Right face:\033[44m__\033[0m \n");
 
-	printf("Up side: (r) \033[41m__\033[0m\n");
+	printf("Up side: Red(r)= \033[41m__\033[0m\n");
 	scanf("%c%c%c",&c->u.r0.c0,&c->u.r0.e,&c->u.r0.c1);
 	scanf(" %c%c%c",&c->u.r1.e0,&c->u.r1.a,&c->u.r1.e1);
 	scanf(" %c%c%c",&c->u.r2.c0,&c->u.r2.e,&c->u.r2.c1);
 
-	printf("Left side: (g) \033[42m__\033[0m\n");
+	printf("Left side: Green(g)= \033[42m__\033[0m\n");
 	scanf(" %c%c%c",&c->l.r0.c0,&c->l.r0.e,&c->l.r0.c1);
 	scanf(" %c%c%c",&c->l.r1.e0,&c->l.r1.a,&c->l.r1.e1);
 	scanf(" %c%c%c",&c->l.r2.c0,&c->l.r2.e,&c->l.r2.c1);
 
-	printf("Front side: (w) \033[47m__\033[0m\n");
+	printf("Front side: White(w)= \033[47m__\033[0m\n");
 	scanf(" %c%c%c",&c->f.r0.c0,&c->f.r0.e,&c->f.r0.c1);
 	scanf(" %c%c%c",&c->f.r1.e0,&c->f.r1.a,&c->f.r1.e1);
 	scanf(" %c%c%c",&c->f.r2.c0,&c->f.r2.e,&c->f.r2.c1);
 
-	printf("Right side: (b) \033[44m__\033[0m\n");
+	printf("Right side: Blue(b)= \033[44m__\033[0m\n");
 	scanf(" %c%c%c",&c->r.r0.c0,&c->r.r0.e,&c->r.r0.c1);
 	scanf(" %c%c%c",&c->r.r1.e0,&c->r.r1.a,&c->r.r1.e1);
 	scanf(" %c%c%c",&c->r.r2.c0,&c->r.r2.e,&c->r.r2.c1);
 
-	printf("Back side: (y) \033[43m__\033[0m\n");
+	printf("Back side: Yellow(y)= \033[43m__\033[0m\n");
 	scanf(" %c%c%c",&c->b.r0.c0,&c->b.r0.e,&c->b.r0.c1);
 	scanf(" %c%c%c",&c->b.r1.e0,&c->b.r1.a,&c->b.r1.e1);
 	scanf(" %c%c%c",&c->b.r2.c0,&c->b.r2.e,&c->b.r2.c1);
 
-	printf("Down side: (o) \033[45m__\033[0m\n");
+	printf("Down side: Orange(o)= \033[45m__\033[0m\n");
 	scanf(" %c%c%c",&c->d.r0.c0,&c->d.r0.e,&c->d.r0.c1);
 	scanf(" %c%c%c",&c->d.r1.e0,&c->d.r1.a,&c->d.r1.e1);
 	scanf(" %c%c%c",&c->d.r2.c0,&c->d.r2.e,&c->d.r2.c1);
 
+}
+////////////////////////////////////////////////////////////
+void cube_know(void){
+printf("commands:\n");
+printf("u,u2,u': Rotate up face by +90,+180,-90 degree\n");
+printf("l,l2,l': Rotate left face by +90,+180,-90 degree\n");
+printf("f,f2,f': Rotate front face by +90,+180,-90 degree\n");
+printf("r,r2,r': Rotate right face by +90,+180,-90 degree\n");
+printf("b,b2,b': Rotate back face by +90,+180,-90 degree\n");
+printf("d,d2,d': Rotate down face by +90,+180,-90 degree\n");
+printf("q: Quit the game\n");
+printf("Note: Instead of orange, it shows a different colour\n");
 }
 //end of project
 //
