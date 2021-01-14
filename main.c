@@ -54,7 +54,7 @@ int n=0;
 
 main(){
 	cube c;
-	char cmd[35];
+	char cmd[50];
 	int s=0;
 input:
 	cube_in(&c);
